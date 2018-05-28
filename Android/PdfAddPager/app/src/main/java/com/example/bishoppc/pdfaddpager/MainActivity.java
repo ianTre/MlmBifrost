@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
@@ -17,9 +19,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import java.io.File;
@@ -31,14 +38,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import static android.text.Layout.Alignment.ALIGN_NORMAL;
+
+
 public class MainActivity extends AppCompatActivity {
-
-
 
     private final int REQUEST_CODE_ASK_PERMISSIONS = 100;
     Button botonCrear;
@@ -70,35 +79,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void createPdfWrapper() throws FileNotFoundException,DocumentException{
 
-        int hasWriteStoragePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
+            int hasWriteStoragePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
-                    showMessageOKCancel("You need to allow access to Storage",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                REQUEST_CODE_ASK_PERMISSIONS);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
+                        showMessageOKCancel("You need to allow access to Storage",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                                    REQUEST_CODE_ASK_PERMISSIONS);
+                                        }
                                     }
-                                }
-                            });
-                    return;
-                }
+                                });
+                        return;
+                    }
 
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_CODE_ASK_PERMISSIONS);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_CODE_ASK_PERMISSIONS);
+                }
+                return;
+            }else {
+                CreatePDF();
             }
-            return;
-        }else {
-            CreatePDF();
-        }
     }
 
     @Override
@@ -136,9 +143,7 @@ public class MainActivity extends AppCompatActivity {
     private void CreatePDF() {
         // create a new document
 
-
         PdfDocument document = new PdfDocument();
-
 
         /*
         // crate a page description
@@ -160,57 +165,127 @@ public class MainActivity extends AppCompatActivity {
         */
 
         // Create Page 2
+
+        //PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(800, 1200, 1).create();
+        //PdfDocument.Page page = document.startPage(pageInfo);
+
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(800, 1200, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
 
 
         Canvas canvas = page.getCanvas();
 
-
         Paint paint = touchEventView.mPaint;
-
         Path path = touchEventView.mPath;
+
         paint.setColor(Color.BLUE);
 
         Date currentTime = Calendar.getInstance().getTime();
-        String textoComienzo = "Dejo por sentado conformidad con el servicio brindado \n por el tecnico bashar al assad";
+
+        String textoComienzo = "Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya" +
+                                "Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya";
+
         String textoNombre = "Nombre : " + txtNombre.getText();
         String textoDni = "Numero Dni : " + txtDni.getText();
 
         Paint paintToText = new Paint();
         paintToText.setColor(Color.BLACK);
         paintToText.setTextSize(30);
-        Rect textBounds = new Rect(0, 0, 500, 300);
-        paintToText.getTextBounds(textoComienzo, 0, textoComienzo.length(), textBounds);
-        canvas.drawText(textoComienzo, 50, 100, paintToText);
-        canvas.drawText(textoDni, 50 ,150 ,paintToText);
+
+
+        //Typeface typeface = Typeface.createFromAsset(getAssets(), "Helvetica.ttf");
+        //paintToText.setTypeface(typeface);
+        //paintToText.setStyle(Paint.Style.FILL);
+        //paintToText.setTypeface(Typeface.create("Arial",Typeface.NORMAL));
+        paintToText.setTypeface(Typeface.DEFAULT);
+
+
+        TextPaint textPaint = new TextPaint();
+        RectF rect = new RectF(50,50,800,200);
+        StaticLayout sl = new StaticLayout(textoComienzo, textPaint, (int)rect.width(), Layout.Alignment.ALIGN_NORMAL, 1, 1, false);
+
+        canvas.save();
+        canvas.translate(rect.left, rect.top);
+        sl.draw(canvas);
+        canvas.restore();
+
+        //drawMultiLineText(textoComienzo,50,100,paintToText,canvas);
+        //canvas.drawText(textoComienzo, 50, 100, paintToText);
+        canvas.drawText(textoDni,50,150 ,paintToText);
         canvas.drawText(textoNombre, 50 ,200 ,paintToText);
-        canvas.drawText("Firma:", 50 ,290 ,paintToText);
-        canvas.translate(50,300);
+        canvas.drawText("Firma:", 50 ,250 ,paintToText);
+        canvas.translate(0,300);
         canvas.drawPath(path,paint);
         document.finishPage(page);
 
 
-        // write the document content
-        //String targetPdf = "/sdcard/test.pdf";
-        targetPdf = Environment.getExternalStorageDirectory().getPath();
-        targetPdf += "/documents/test2.pdf";
-        File filePath = new File(targetPdf);
-        try {
+        String targetPdf = Environment.getExternalStorageDirectory().toString();
+        File filePath = new File(targetPdf, "/Download/documents/"+"test.pdf");
+
+
+        try
+        {
             document.writeTo(new FileOutputStream(filePath));
+
+            //AGREGAR//////////////////////////////////////////////////////////////
+            /*Esto refresca la interaccion entre Windows MTP y Android*/
+            Uri uri = Uri.fromFile(filePath);
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+            sendBroadcast(intent);
+            ///////////////////////////////////////////////////////////////////////
+
             Toast.makeText(this, "Done", Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
+
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-            Toast.makeText(this, "Something wrong: " + e.toString(),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
         }
 
         // close the document
         document.close();
 
-
     }
 
+    private StaticLayout measure(TextPaint textPaint, String text, Integer wrapWidth )
+    {
+        int boundedWidth = Integer.MAX_VALUE;
+        if (wrapWidth != null && wrapWidth > 0 )
+        {
+            boundedWidth = wrapWidth;
+        }
+        StaticLayout layout = new StaticLayout( text, textPaint, boundedWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false );
+        return layout;
+    }
+
+    //R.layout.activity_main
+    private float getMaxLineWidth( StaticLayout layout )
+    {
+        float maxLine = 0.0f;
+        int lineCount = layout.getLineCount();
+        for( int i = 0; i < lineCount; i++ ) {
+            if( layout.getLineWidth( 0 ) > maxLine )
+            {
+                maxLine = layout.getLineWidth( 0 );
+            }
+        }
+        return maxLine;
+    }
+
+    void drawMultiLineText(String str, float x, float y, Paint paint, Canvas canvas){
+        String[] lines = str.split("\n");
+        float txtSize = -paint.ascent() + paint.descent();
+        if(paint.getStyle() == Paint.Style.FILL_AND_STROKE || paint.getStyle() == Paint.Style.STROKE){
+            txtSize += paint.getStrokeWidth();
+        }
+        float lineSpace= txtSize * 0.2f;
+
+        for(int i=0; i < lines.length; ++i){
+            canvas.drawText(lines[i],x,y + (txtSize + lineSpace) * i, paint);
+        }
+        canvas.translate(0,100);
+    }
 
     private void previewPdf() {
         PackageManager packageManager = getPackageManager();

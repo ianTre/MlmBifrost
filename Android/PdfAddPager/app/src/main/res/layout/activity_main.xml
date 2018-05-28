@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.bishoppc.pdfaddpager.MainActivity">
+    tools:context="com.example.bishoppc.pdfaddpager.MainActivity"
+    tools:layout_editor_absoluteY="73dp">
 
     <EditText
         android:id="@+id/txtNombre"
         android:layout_width="356dp"
         android:layout_height="47dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Nombre y Apellido"
@@ -49,7 +50,7 @@
         android:id="@+id/textView"
         android:layout_width="105dp"
         android:layout_height="32dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="Firma"
         android:textSize="24sp"
@@ -57,19 +58,15 @@
         app:layout_constraintBottom_toTopOf="@+id/canvas"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtDni"
-        app:layout_constraintVertical_bias="0.736" />
+        app:layout_constraintVertical_bias="0.776" />
 
     <com.example.bishoppc.pdfaddpager.TouchEventView
         android:id="@+id/canvas"
-        android:layout_width="352dp"
+        android:layout_width="349dp"
         android:layout_height="203dp"
-        android:layout_marginBottom="28dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/btnCrear"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="26dp" />
 
 
 </android.support.constraint.ConstraintLayout>
