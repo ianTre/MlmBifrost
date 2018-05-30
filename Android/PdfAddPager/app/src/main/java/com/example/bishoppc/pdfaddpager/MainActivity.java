@@ -42,6 +42,8 @@ import java.util.List;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import static android.text.Layout.Alignment.ALIGN_NORMAL;
@@ -105,7 +107,67 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }else {
                 CreatePDF();
+                String[] srcs = {"/storage/emulated/0/Download/documents/hojas.pdf","/storage/emulated/0/Download/documents/test.pdf"};
+                mergePdf(srcs);
             }
+    }
+
+    private void mergePdf(String[] srcs) {
+        try {
+            // Create document object
+            Document document = new Document();
+            // Create pdf copy object to copy current document to the output mergedresult file
+            String targetPdf = Environment.getExternalStorageDirectory().toString();
+            File filePath = new File(targetPdf, "/Download/documents/" + "hojas+pdf.pdf");
+
+            PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath));
+            //Open the document
+            document.open();
+            PdfReader pr;
+            int n;
+
+            for (int i = 0; i < srcs.length; i++) {
+                // Create pdf reader object to read each input pdf file
+                pr = new PdfReader(srcs[i].toString());
+                // Get the number of pages of the pdf file
+                n = pr.getNumberOfPages();
+                for (int page = 1; page <= n; page++)
+                {
+                    // Import all pages from the file to PdfCopy
+                    copy.addPage(copy.getImportedPage(pr, page));
+                }
+            }
+
+            //AGREGAR//////////////////////////////////////////////////////////////
+            /*Esto refresca la interaccion entre Windows MTP y Android*/
+            Uri uri = Uri.fromFile(filePath);
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+            sendBroadcast(intent);
+            ///////////////////////////////////////////////////////////////////////
+
+            Toast.makeText(this, "Done", Toast.LENGTH_LONG).show();
+
+            document.close(); // close the document
+
+        }
+
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (DocumentException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -182,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        String textoComienzo = "Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya" +
+        String textoComienzo = "2Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya" +
                                 "Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya";
 
         String textoNombre = "Nombre : " + txtNombre.getText();
