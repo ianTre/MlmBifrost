@@ -1,11 +1,13 @@
 package com.example.bishoppc.pdfaddpager;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -23,10 +25,12 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import java.io.File;
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     TouchEventView touchEventView;
     String targetPdf;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +70,12 @@ public class MainActivity extends AppCompatActivity {
         botonCrear = (Button)findViewById(R.id.btnCrear);
         txtNombre = (EditText)findViewById(R.id.txtNombre);
         txtDni = (EditText)findViewById(R.id.txtDni);
+
         touchEventView = (TouchEventView)findViewById(R.id.canvas);
+        touchEventView.setFocusableInTouchMode(true);
+
+        final CustomScrollView myScrollView = (CustomScrollView) findViewById(R.id.myScroll);
+        final LinearLayout myLayout = (LinearLayout) findViewById(R.id.layout_main);
 
         botonCrear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +89,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        touchEventView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    myScrollView.setEnableScrolling(true); // scrolling disabled
+                    botonCrear.requestFocus();
+                }else{
+                    myScrollView.setEnableScrolling(false); // scrolling enabled
+                }
+
+            }
+        });
+
+        myLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(MotionEvent.ACTION_DOWN == event.getAction())
+                    botonCrear.requestFocus();
+                return false;
+            }
+        });
+
     }
 
     private void createPdfWrapper() throws FileNotFoundException,DocumentException{
@@ -128,13 +161,13 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < srcs.length; i++) {
                 // Create pdf reader object to read each input pdf file
-                pr = new PdfReader(srcs[i].toString());
+                pr = new PdfReader(srcs[i].toString());                     //recorre los pdf que hay en la cadena de String
                 // Get the number of pages of the pdf file
-                n = pr.getNumberOfPages();
+                n = pr.getNumberOfPages();                                  //numero de hojas que tiene dicho pdf
                 for (int page = 1; page <= n; page++)
                 {
                     // Import all pages from the file to PdfCopy
-                    copy.addPage(copy.getImportedPage(pr, page));
+                    copy.addPage(copy.getImportedPage(pr, page));           //añade a la variable copy all the pages
                 }
             }
 
@@ -193,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    /* PROYECTO ACTUAL*/
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(this)
                 .setMessage(message)
@@ -231,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         //PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(800, 1200, 1).create();
         //PdfDocument.Page page = document.startPage(pageInfo);
 
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(800, 1200, 1).create();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(800, 1200, 1).create(); //Se da el alto y ancho a la pagina
         PdfDocument.Page page = document.startPage(pageInfo);
 
 
@@ -239,49 +274,54 @@ public class MainActivity extends AppCompatActivity {
 
         Paint paint = touchEventView.mPaint;
         Path path = touchEventView.mPath;
-
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.BLUE);                           //Se le da color azul al lienzo del TouchEventView
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        String textoComienzo = "2Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya" +
-                                "Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya, Hola como te va todo bien joya";
+        String textoComienzo = "Dejo por sentado conformidad con el servicio brindado por el tecnico bashar al assad Y que en el dia de la Fecha recibí" +
+                "la CPU funcionando y en óptimo estado. Sin más estoy a la espera de recibir 3 Mouse y 2 Teclados para concluir con lo" +
+                "solicitado anteriormente";
 
         String textoNombre = "Nombre : " + txtNombre.getText();
         String textoDni = "Numero Dni : " + txtDni.getText();
 
         Paint paintToText = new Paint();
+
+        paintToText.setStyle(Paint.Style.FILL);                                         //Se le da Formato texto, Dni y Nombre
         paintToText.setColor(Color.BLACK);
         paintToText.setTextSize(30);
+        paintToText.setTypeface(Typeface.create("Arial",Typeface.NORMAL));
 
-
-        //Typeface typeface = Typeface.createFromAsset(getAssets(), "Helvetica.ttf");
-        //paintToText.setTypeface(typeface);
-        //paintToText.setStyle(Paint.Style.FILL);
-        //paintToText.setTypeface(Typeface.create("Arial",Typeface.NORMAL));
-        paintToText.setTypeface(Typeface.DEFAULT);
 
 
         TextPaint textPaint = new TextPaint();
         RectF rect = new RectF(50,50,800,200);
-        StaticLayout sl = new StaticLayout(textoComienzo, textPaint, (int)rect.width(), Layout.Alignment.ALIGN_NORMAL, 1, 1, false);
+        StaticLayout sl = new StaticLayout(textoComienzo, textPaint, (int)rect.width(), Layout.Alignment.ALIGN_NORMAL,
+                                          1, 1, false);
 
         canvas.save();
-        canvas.translate(rect.left, rect.top);
+        canvas.translate(rect.left, rect.top);                          //Se le da el alto y ancho al objeto
         sl.draw(canvas);
         canvas.restore();
 
-        //drawMultiLineText(textoComienzo,50,100,paintToText,canvas);
-        //canvas.drawText(textoComienzo, 50, 100, paintToText);
         canvas.drawText(textoDni,50,150 ,paintToText);
         canvas.drawText(textoNombre, 50 ,200 ,paintToText);
         canvas.drawText("Firma:", 50 ,250 ,paintToText);
-        canvas.translate(0,300);
-        canvas.drawPath(path,paint);
+        canvas.translate(0,300);                                //Se genera un espacio en el alto
+
+        Matrix scaleMatrix = new Matrix();                              //Se le da una escala menor para que entre en el pdf//
+        RectF rectF = new RectF();
+        path.computeBounds(rectF, true);
+        scaleMatrix.setScale(0.6f, 0.6f,0,rectF.centerY());
+        path.transform(scaleMatrix);
+
+        canvas.drawPath(path,paint);                                    //Se dibuja el recorrido hecho con el lienzo al pdf //
         document.finishPage(page);
 
 
-        String targetPdf = Environment.getExternalStorageDirectory().toString();
+        // write the document content
+        //String targetPdf = "/sdcard/test.pdf";
+        targetPdf = Environment.getExternalStorageDirectory().toString();
         File filePath = new File(targetPdf, "/Download/documents/"+"test.pdf");
 
 
@@ -307,10 +347,9 @@ public class MainActivity extends AppCompatActivity {
 
         // close the document
         document.close();
-
     }
 
-    private StaticLayout measure(TextPaint textPaint, String text, Integer wrapWidth )
+    /*private StaticLayout measure(TextPaint textPaint, String text, Integer wrapWidth )
     {
         int boundedWidth = Integer.MAX_VALUE;
         if (wrapWidth != null && wrapWidth > 0 )
@@ -319,10 +358,10 @@ public class MainActivity extends AppCompatActivity {
         }
         StaticLayout layout = new StaticLayout( text, textPaint, boundedWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false );
         return layout;
-    }
+    }*/
 
     //R.layout.activity_main
-    private float getMaxLineWidth( StaticLayout layout )
+    /*private float getMaxLineWidth( StaticLayout layout )
     {
         float maxLine = 0.0f;
         int lineCount = layout.getLineCount();
@@ -333,9 +372,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return maxLine;
-    }
+    }*/
 
-    void drawMultiLineText(String str, float x, float y, Paint paint, Canvas canvas){
+    /*void drawMultiLineText(String str, float x, float y, Paint paint, Canvas canvas){
         String[] lines = str.split("\n");
         float txtSize = -paint.ascent() + paint.descent();
         if(paint.getStyle() == Paint.Style.FILL_AND_STROKE || paint.getStyle() == Paint.Style.STROKE){
@@ -347,9 +386,9 @@ public class MainActivity extends AppCompatActivity {
             canvas.drawText(lines[i],x,y + (txtSize + lineSpace) * i, paint);
         }
         canvas.translate(0,100);
-    }
+    }*/
 
-    private void previewPdf() {
+    /*private void previewPdf() {
         PackageManager packageManager = getPackageManager();
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
@@ -365,5 +404,5 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 }

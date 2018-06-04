@@ -89,6 +89,9 @@ public class TouchEventView extends View {
 
         float x = event.getX();
         float y = event.getY();
+        TouchEventView touchEventView;
+        touchEventView = (TouchEventView)findViewById(R.id.canvas);
+        touchEventView.requestFocus();
 
         switch (event.getAction())
         {
