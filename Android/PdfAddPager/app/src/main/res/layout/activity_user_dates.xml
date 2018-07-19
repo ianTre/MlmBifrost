@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.bishoppc.pdfaddpager.DatesUser"
+    tools:layout_editor_absoluteY="73dp">
+
+    <com.example.bishoppc.pdfaddpager.CustomScrollView
+        android:id="@+id/myScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <LinearLayout
+            android:id="@+id/layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/txtLeyenda"
+                android:layout_width="362dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:focusableInTouchMode="false"
+                tools:layout_editor_absoluteX="131dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <EditText
+                android:id="@+id/txtNombre"
+                android:layout_width="356dp"
+                android:layout_height="47dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Nombre y Apellido"
+                android:inputType="textPersonName"
+                app:layout_constraintBottom_toTopOf="@+id/txtDni"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <EditText
+                android:id="@+id/txtDni"
+                android:layout_width="357dp"
+                android:layout_height="47dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Dni"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="105dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:text="Firma"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/canvas"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtDni"
+                app:layout_constraintVertical_bias="0.736" />
+
+            <com.example.bishoppc.pdfaddpager.TouchEventView
+                android:id="@+id/canvas"
+                android:layout_width="wrap_content"
+                android:layout_height="203dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="189dp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="25dp"
+                tools:layout_editor_absoluteY="16dp">
+
+
+                <Button
+                    android:id="@+id/buttonAff"
+                    android:layout_width="54dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Afirmativo" />
+                <Button
+                    android:id="@+id/buttonNeg"
+                    android:layout_width="54dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Negativo" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonPrev"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Crear PDF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </LinearLayout>
+
+    </com.example.bishoppc.pdfaddpager.CustomScrollView>
+
+</android.support.constraint.ConstraintLayout>
