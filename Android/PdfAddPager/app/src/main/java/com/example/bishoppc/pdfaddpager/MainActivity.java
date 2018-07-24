@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICKER = 1;
     //Declaramos los siguientes obejtos
     Button botonExaminar;
+    Button botonAff;
     EditText textExaminar;
     EditText textoTecnico;
     PDFView pdfView;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         botonExaminar = (Button) findViewById(R.id.btnExaminar);
+        botonAff=(Button) findViewById(R.id.buttonAff);
         textExaminar = (EditText) findViewById(R.id.txtExaminar);
         pdfView = (PDFView) findViewById(R.id.pdfReader);
         btnSiguiente = (Button)findViewById(R.id.buttonAff);
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
                     textExaminar.setText(data.getData().getPath().toString());
                     filePaths = new File(textExaminar.getText().toString());
+                    botonAff.setEnabled(true);
 
                     pdfView = (PDFView)findViewById(R.id.pdfReader);
                     //pdfView.fromAsset("manual.pdf").load();

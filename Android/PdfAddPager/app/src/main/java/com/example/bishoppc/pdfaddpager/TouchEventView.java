@@ -22,6 +22,7 @@ public class TouchEventView extends View {
     public Canvas mCanvas;
     public Paint mPaint = new Paint();
     public Path mPath = new Path();
+    public boolean painted=false;
     private float mX, mY;
     private static final  float TOLERANCE = 5;
     Context context;
@@ -75,6 +76,7 @@ public class TouchEventView extends View {
 
     public void clearCanvas()
     {
+        painted=false;
         mPath.reset();
         invalidate();
     }
@@ -97,6 +99,7 @@ public class TouchEventView extends View {
         {
             case MotionEvent.ACTION_DOWN:
                 startTouch(x,y);
+                painted=true;
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
