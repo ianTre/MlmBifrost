@@ -384,9 +384,7 @@ public class DatesUser extends AppCompatActivity{
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        String textoComienzo = "Dejo por sentado conformidad con el servicio brindado por el tecnico bashar al assad Y que en el dia de la Fecha recibí" +
-                "la CPU funcionando y en óptimo estado. Sin más estoy a la espera de recibir 3 Mouse y 2 Teclados para concluir con lo" +
-                "solicitado anteriormente";
+        String textoComienzo = txtLeyenda.getText().toString();
 
         String textoNombre = "Nombre : " + txtNombre.getText();
         String textoDni = "Numero Dni : " + txtDni.getText();
@@ -455,7 +453,7 @@ public class DatesUser extends AppCompatActivity{
         document.close();
     }
 
-    private void previewPdf() throws FileNotFoundException{
+    /*private void previewPdf() throws FileNotFoundException{
 
         //Intent testIntent = new Intent(Intent.ACTION_VIEW);
         //testIntent.setType("application/pdf");
@@ -473,7 +471,7 @@ public class DatesUser extends AppCompatActivity{
             startActivity(intent);
         else
             Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     private void enableAffButton()
     {
@@ -557,11 +555,15 @@ public class DatesUser extends AppCompatActivity{
     }*/
 
     /*private void previewPdf() {
+
         PackageManager packageManager = getPackageManager();
+
+        File pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/pdf.pdf");
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
+        testIntent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
         List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
-        File pdfFile = new File(targetPdf);
+
 
         if (list.size() > 0) {
             Intent intent = new Intent();
@@ -573,4 +575,25 @@ public class DatesUser extends AppCompatActivity{
             Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
         }
     }*/
+
+    private void previewPdf()throws FileNotFoundException{
+
+        //Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        //testIntent.setType("application/pdf");
+
+        File pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/pdf.pdf");
+        Intent intent = new Intent();
+
+        //Uri uri = Uri.fromFile(pdfFile);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
+
+        PackageManager packageManager = getPackageManager();
+        List list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        if (list.size() > 0)
+            startActivity(intent);
+        else
+            Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
+    }
 }

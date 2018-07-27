@@ -55,6 +55,7 @@
                     android:focusableInTouchMode="true"
                     android:text="Examinar" />
             </LinearLayout>
+            <!--- Un comentario de una sola línea -->
 
             <com.github.barteksc.pdfviewer.PDFView
                 android:id="@+id/pdfReader"
@@ -62,7 +63,6 @@
                 android:layout_height="387dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:focusableInTouchMode="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -70,29 +70,27 @@
                 android:id="@+id/buttonAff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:focusableInTouchMode="true"
                 android:enabled="false"
+                android:focusableInTouchMode="true"
                 android:text="Afirmativo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Leyenda:"
-                />
+                android:text="Leyenda:" />
 
             <EditText
                 android:id="@+id/txtTecnico"
                 android:layout_width="362dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:focusableInTouchMode="true"
                 android:inputType="textMultiLine"
                 android:text="Dejo por sentado conformidad con el servicio brindado por el tecnico bashar al assad. Y que en el dia de la Fecha recibí la CPU funcionando y en óptimo estado. Sin más estoy a la espera de recibir 3 Mouse y 2 Teclados para concluir con lo solicitado anteriormente"
                 tools:layout_editor_absoluteX="131dp"
                 tools:layout_editor_absoluteY="0dp" />
 
-
-
+            <!--- android:ems="10" es un Font Size  -->
+            <!--- Un comentario de una sola línea -->
         </LinearLayout>
 
     </com.example.bishoppc.pdfaddpager.CustomScrollView>

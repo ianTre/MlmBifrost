@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     PDFView pdfView;
 
     private File filePaths;
-    Button btnSiguiente;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -42,10 +41,19 @@ public class MainActivity extends AppCompatActivity {
         botonAff=(Button) findViewById(R.id.buttonAff);
         textExaminar = (EditText) findViewById(R.id.txtExaminar);
         pdfView = (PDFView) findViewById(R.id.pdfReader);
-        btnSiguiente = (Button)findViewById(R.id.buttonAff);
         textoTecnico=(EditText)findViewById(R.id.txtTecnico);
 
+        //Es necesario una sola vez para no tener que hacer mas de un click
         botonExaminar.setFocusableInTouchMode(true);
+
+        /*La manera en la cual está hecho es que se le da el foco al botonExaminar, luego se tiene
+          un Listener el cual está fijandose constantemente el setFocus y LostFocus. Si dicho objeto
+          tiene el Foco, se habilita el Scrollview en la pantalla y sino se lo deshabilita.
+          Al haber quedado el foco en el PDFView, la App necesita por ejemplo que si se presiona un
+          botón, el numero de veces sea 2. Porque? porque un click es para que el foco del PDFView
+          se vaya al boton y el segundo es para que se ejecute dicha acción.
+          Entonces se agregó un Listener que cuando se hace click en el layout main se le da el foco
+          al buttonAff*/
 
         botonExaminar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -54,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnSiguiente.setOnClickListener(new View.OnClickListener() {
+        botonAff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this , PreviewUser.class);
@@ -67,14 +75,15 @@ public class MainActivity extends AppCompatActivity {
         final CustomScrollView myScrollView = (CustomScrollView) findViewById(R.id.myScroll);
         final LinearLayout myLayout = (LinearLayout) findViewById(R.id.layout_main);
 
+
         botonExaminar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
-                    myScrollView.setEnableScrolling(true); // scrolling disabled
-                    //btnSiguiente.requestFocus();
+                    myScrollView.setEnableScrolling(true); // Scrolling enabled
+                    //myLayout.requestFocus();
                 }else{
-                    myScrollView.setEnableScrolling(false); // scrolling enabled
+                    myScrollView.setEnableScrolling(false); // Scrolling disabled
                 }
 
             }
@@ -84,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(MotionEvent.ACTION_DOWN == event.getAction())
-                    btnSiguiente.requestFocus();
+                    botonAff.requestFocus();
                 return false;
             }
         });
