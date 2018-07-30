@@ -32,7 +32,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.github.barteksc.pdfviewer.PDFView;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfCopy;
@@ -65,9 +64,6 @@ public class DatesUser extends AppCompatActivity{
     Button botonExaminar;
     EditText textExaminar;
 
-    PDFView pdfView;
-
-    private File pdfFile;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -109,31 +105,34 @@ public class DatesUser extends AppCompatActivity{
             }
         });
 
-        touchEventView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    myScrollView.setEnableScrolling(true); // scrolling disabled
-                    botonAff.requestFocus();
-                }else{
-                    myScrollView.setEnableScrolling(false); // scrolling enabled
-                }
-
-            }
-        });
-
         myLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(MotionEvent.ACTION_DOWN == event.getAction())
-                {
-                    botonAff.requestFocus();
-                    //enableAffButton();
-                }
+                    myScrollView.setEnableScrolling(true); // Scrolling enabled
+                myLayout.requestFocus();
 
                 return false;
             }
         });
+
+        touchEventView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                if (hasFocus)
+                    myScrollView.setEnableScrolling(false); // scrolling disabled
+
+            }
+        });
+
+        /*touchEventView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                myScrollView.setEnableScrolling(false); // Scrolling disabled
+                //myLayout.requestFocus();
+            }
+        });*/
 
         txtDni.addTextChangedListener(new TextWatcher() {
             @Override
@@ -256,7 +255,7 @@ public class DatesUser extends AppCompatActivity{
             // Create pdf copy object to copy current document to the output mergedresult file
             String targetPdf = Environment.getExternalStorageDirectory().toString();
 
-            pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
+            //Final pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
             File filePath = new File(targetPdf, "/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
 
             PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath));
@@ -397,7 +396,6 @@ public class DatesUser extends AppCompatActivity{
         paintToText.setTypeface(Typeface.create("Arial",Typeface.NORMAL));
 
 
-
         TextPaint textPaint = new TextPaint();
         RectF rect = new RectF(50,50,800,200);
         StaticLayout sl = new StaticLayout(textoComienzo, textPaint, (int)rect.width(), Layout.Alignment.ALIGN_NORMAL,
@@ -453,26 +451,6 @@ public class DatesUser extends AppCompatActivity{
         document.close();
     }
 
-    /*private void previewPdf() throws FileNotFoundException{
-
-        //Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        //testIntent.setType("application/pdf");
-
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-
-        //Uri uri = Uri.fromFile(pdfFile);
-        intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
-
-        PackageManager packageManager = getPackageManager();
-        List list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        if (list.size() > 0)
-            startActivity(intent);
-        else
-            Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
-    }*/
-
     private void enableAffButton()
     {
         String textoNombre=txtNombre.getText().toString();
@@ -486,34 +464,26 @@ public class DatesUser extends AppCompatActivity{
 
     }
 
-    /*private void PickFile(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intent, "Instale un administrador de archivos"), PICKER);
-    }*/
+    private void previewPdf()throws FileNotFoundException{
 
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        switch (requestCode){
-            case PICKER:
-                if(resultCode == RESULT_OK)
-                {
-                    String FilePath = data.getData().getPath();
-                    textExaminar.setText(FilePath);*/
+        //Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        //testIntent.setType("application/pdf");
 
-                    /*try
-                    {
-                        pdfFile = new File(textExaminar.getText().toString());
-                        //previewPdf(pdfFile);
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        e.printStackTrace();
-                    }*/
-                //}
-                //break;
-        //}
-    //}
+        File pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/pdf.pdf");
+        Intent intent = new Intent();
+
+        //Uri uri = Uri.fromFile(pdfFile);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
+
+        PackageManager packageManager = getPackageManager();
+        List list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        if (list.size() > 0)
+            startActivity(intent);
+        else
+            Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
+    }
 
     /*private StaticLayout measure(TextPaint textPaint, String text, Integer wrapWidth )
     {
@@ -575,25 +545,4 @@ public class DatesUser extends AppCompatActivity{
             Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
         }
     }*/
-
-    private void previewPdf()throws FileNotFoundException{
-
-        //Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        //testIntent.setType("application/pdf");
-
-        File pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/pdf.pdf");
-        Intent intent = new Intent();
-
-        //Uri uri = Uri.fromFile(pdfFile);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
-
-        PackageManager packageManager = getPackageManager();
-        List list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        if (list.size() > 0)
-            startActivity(intent);
-        else
-            Toast.makeText(this,"Download a PDF Viewer to see the generated PDF",Toast.LENGTH_SHORT).show();
-    }
 }

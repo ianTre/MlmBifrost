@@ -43,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
         pdfView = (PDFView) findViewById(R.id.pdfReader);
         textoTecnico=(EditText)findViewById(R.id.txtTecnico);
 
+
+
         //Es necesario una sola vez para no tener que hacer mas de un click
-        botonExaminar.setFocusableInTouchMode(true);
+
+        //botonExaminar.setFocusableInTouchMode(true);
 
         /*La manera en la cual está hecho es que se le da el foco al botonExaminar, luego se tiene
           un Listener el cual está fijandose constantemente el setFocus y LostFocus. Si dicho objeto
@@ -75,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
         final CustomScrollView myScrollView = (CustomScrollView) findViewById(R.id.myScroll);
         final LinearLayout myLayout = (LinearLayout) findViewById(R.id.layout_main);
 
+        myScrollView.setEnableScrolling(true);
 
-        botonExaminar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*botonExaminar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
@@ -87,13 +91,37 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
+
+        /*pdfView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(MotionEvent.ACTION_UP == event.getAction())
+                    botonAff.clearFocus();
+                return false;
+            }
+        });*/
+
+        /*pdfView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    myScrollView.setEnableScrolling(true); // scrolling disabled
+                    botonAff.requestFocus();
+                }else{
+                    myScrollView.setEnableScrolling(false); // scrolling enabled
+                }
+
+            }
+        });*/
 
         myLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(MotionEvent.ACTION_DOWN == event.getAction())
-                    botonAff.requestFocus();
+                    myScrollView.setEnableScrolling(true); // Scrolling enabled
+                //myLayout.requestFocus();
+
                 return false;
             }
         });
@@ -101,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
         pdfView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                botonExaminar.requestFocus();
+                myScrollView.setEnableScrolling(false); // Scrolling disabled
+                //myLayout.requestFocus();
             }
         });
 
