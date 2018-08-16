@@ -2,6 +2,7 @@ package com.example.bishoppc.pdfaddpager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +30,7 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -37,6 +41,8 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfReader;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -45,6 +51,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.lang.String;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class DatesUser extends AppCompatActivity{
     private final int REQUEST_CODE_ASK_PERMISSIONS = 100;
@@ -52,9 +59,15 @@ public class DatesUser extends AppCompatActivity{
     Button botonNeg;
     Button botonAff;
 
+
+
+    TextInputLayout tilNombre;
+    TextInputLayout tilDni;
+
     EditText txtLeyenda;
-    EditText txtNombre;
-    EditText txtDni;
+    EditText tieTxtNombre;
+    EditText tieTxtDni;
+
     TouchEventView touchEventView;
     String targetPdf;
 
@@ -78,8 +91,12 @@ public class DatesUser extends AppCompatActivity{
         botonNeg = (Button)findViewById(R.id.buttonNeg);
         botonPrevisualizar = (Button)findViewById(R.id.buttonPrev);
 
-        txtNombre = (EditText)findViewById(R.id.txtNombre);
-        txtDni = (EditText)findViewById(R.id.txtDni);
+        tilNombre = (TextInputLayout)findViewById(R.id.tilTxtNombre);
+        tilDni=(TextInputLayout)findViewById(R.id.tilTxtDni);
+
+        tieTxtNombre = (EditText) findViewById(R.id.tieTxtNombre);
+        tieTxtDni = (EditText) findViewById(R.id.tieTxtDni);
+
         txtLeyenda=(EditText)findViewById(R.id.txtLeyenda);
 
         touchEventView = (TouchEventView)findViewById(R.id.canvas);
@@ -95,6 +112,7 @@ public class DatesUser extends AppCompatActivity{
         botonAff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                     createPdfWrapper();
                 } catch (FileNotFoundException e) {
@@ -102,6 +120,7 @@ public class DatesUser extends AppCompatActivity{
                 } catch (DocumentException e) {
                     e.printStackTrace();
                 }
+
             }
         });
 
@@ -134,7 +153,9 @@ public class DatesUser extends AppCompatActivity{
             }
         });*/
 
-        txtDni.addTextChangedListener(new TextWatcher() {
+        tilDni.setError("null");
+
+        tieTxtDni.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -146,12 +167,14 @@ public class DatesUser extends AppCompatActivity{
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(Editable editable)
+            {
+
                 enableAffButton();
             }
         });
 
-        txtNombre.addTextChangedListener(new TextWatcher() {
+        tieTxtNombre.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -163,18 +186,19 @@ public class DatesUser extends AppCompatActivity{
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                enableAffButton();
-            }
-        });
+            public void afterTextChanged(Editable editable)
+            {
+            enableAffButton();
+        }
+    });
 
         botonNeg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
                 botonAff.setEnabled(false);
-                txtNombre.setText("");
-                txtDni.setText("");
+                tieTxtNombre.setText("");
+                tieTxtDni.setText("");
                 touchEventView.clearCanvas();
 
             }
@@ -183,7 +207,8 @@ public class DatesUser extends AppCompatActivity{
         touchEventView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(MotionEvent.ACTION_DOWN == event.getAction())
+                removeKeyboard();
+                if(MotionEvent.ACTION_MOVE == event.getAction())
                     enableAffButton();
 
                 return false;
@@ -204,7 +229,26 @@ public class DatesUser extends AppCompatActivity{
                 }
             }
         });
+
     }
+
+    private void removeKeyboard()
+    {
+        View view = this.getCurrentFocus();
+        view.clearFocus();
+        if (view != null)
+        {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    /*private boolean dniValido(String dni) {
+
+            tilDni.setError("Dni Invalido");
+            return true;
+
+    }*/
 
     private void createPdfWrapper() throws FileNotFoundException,DocumentException{
 
@@ -385,8 +429,8 @@ public class DatesUser extends AppCompatActivity{
 
         String textoComienzo = txtLeyenda.getText().toString();
 
-        String textoNombre = "Nombre : " + txtNombre.getText();
-        String textoDni = "Numero Dni : " + txtDni.getText();
+        String textoNombre = "Nombre : " + tieTxtNombre.getText();
+        String textoDni = "Numero Dni : " + tieTxtDni.getText();
 
         Paint paintToText = new Paint();
 
@@ -453,8 +497,8 @@ public class DatesUser extends AppCompatActivity{
 
     private void enableAffButton()
     {
-        String textoNombre=txtNombre.getText().toString();
-        String textoDni=txtDni.getText().toString();
+        String textoNombre=tieTxtNombre.getText().toString();
+        String textoDni=tieTxtDni.getText().toString();
         boolean pintado=touchEventView.painted;
 
         if (textoNombre.equals("") || textoDni.equals("") || pintado == false)

@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.bishoppc.pdfaddpager.PreviewUser"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.bishoppc.pdfaddpager.PreviewUser">
+    android:background="@drawable/salud2018" >
 
     <LinearLayout
         android:id="@+id/layout_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/paddingHorizontal"
+        android:focusableInTouchMode="true">
 
         <com.github.barteksc.pdfviewer.PDFView
             android:id="@+id/pdfReader"
-            android:layout_width="368dp"
-            android:layout_height="455dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginTop="@dimen/paddingVerticalX2" />
 
         <Button
             android:id="@+id/buttonAff"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Firmar" />
+            android:layout_width="@dimen/textButtonAffWidth"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/paddingVerticalX2"
+            android:theme="@style/RaisedButtonDark"
+            android:text="@string/textoDeFirmaLabel_user.dates" />
 
     </LinearLayout>
 

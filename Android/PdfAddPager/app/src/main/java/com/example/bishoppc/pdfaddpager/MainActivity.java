@@ -2,11 +2,13 @@ package com.example.bishoppc.pdfaddpager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Button botonAff;
     EditText textExaminar;
     EditText textoTecnico;
+    EditText textoLeyenda;
     PDFView pdfView;
 
     private File filePaths;
@@ -42,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
         textExaminar = (EditText) findViewById(R.id.txtExaminar);
         pdfView = (PDFView) findViewById(R.id.pdfReader);
         textoTecnico=(EditText)findViewById(R.id.txtTecnico);
+        textoLeyenda=(EditText)findViewById(R.id.txtLeyenda);
 
 
+        //botonExaminar.requestFocus();
 
         //Es necesario una sola vez para no tener que hacer mas de un click
 
@@ -77,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         final CustomScrollView myScrollView = (CustomScrollView) findViewById(R.id.myScroll);
         final LinearLayout myLayout = (LinearLayout) findViewById(R.id.layout_main);
+        final LinearLayout examinarLayout = (LinearLayout) findViewById(R.id.layout_examinar);
 
         myScrollView.setEnableScrolling(true);
 
@@ -130,10 +136,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 myScrollView.setEnableScrolling(false); // Scrolling disabled
-                //myLayout.requestFocus();
+                removeKeyboard();
+                examinarLayout.requestFocus();
             }
         });
 
+    }
+
+    private void removeKeyboard()
+    {
+        View view = this.getCurrentFocus();
+        view.clearFocus();
+        if (view != null)
+        {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void PickFile(){

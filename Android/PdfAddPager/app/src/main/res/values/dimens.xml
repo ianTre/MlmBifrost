@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textSizeDeFirmaLabel">25sp</dimen>
+    <dimen name="textSizeTextViews">20sp</dimen>
+    <dimen name="paddingHorizontal">18dp</dimen>
+    <dimen name="heightTouchEventView">200dp</dimen>
+    <dimen name="paddingVerticalX3">32dp</dimen>
+    <dimen name="paddingVerticalX1">8dp</dimen>
+    <dimen name="paddingVerticalX2">16dp</dimen>
+    <dimen name="textButtonAffWidth">200dp</dimen>
+    <dimen name="buttonPrevWidth">200dp</dimen>
+</resources>
