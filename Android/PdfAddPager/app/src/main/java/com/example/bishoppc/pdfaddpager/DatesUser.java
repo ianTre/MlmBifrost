@@ -2,10 +2,12 @@ package com.example.bishoppc.pdfaddpager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -36,6 +38,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.bishoppc.pdfaddpager.utilidades.Utilidades;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfCopy;
@@ -47,10 +50,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.lang.String;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class DatesUser extends AppCompatActivity{
@@ -59,14 +65,13 @@ public class DatesUser extends AppCompatActivity{
     Button botonNeg;
     Button botonAff;
 
-
-
     TextInputLayout tilNombre;
     TextInputLayout tilDni;
 
     EditText txtLeyenda;
     EditText tieTxtNombre;
     EditText tieTxtDni;
+    EditText tieTxtLegajo;
 
     TouchEventView touchEventView;
     String targetPdf;
@@ -77,6 +82,7 @@ public class DatesUser extends AppCompatActivity{
     Button botonExaminar;
     EditText textExaminar;
 
+    Global userName = Global.getInstance();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -92,12 +98,13 @@ public class DatesUser extends AppCompatActivity{
         botonPrevisualizar = (Button)findViewById(R.id.buttonPrev);
 
         tilNombre = (TextInputLayout)findViewById(R.id.tilTxtNombre);
-        tilDni=(TextInputLayout)findViewById(R.id.tilTxtDni);
+        tilDni=(TextInputLayout)findViewById(R.id.tilTxtDnii);
 
         tieTxtNombre = (EditText) findViewById(R.id.tieTxtNombre);
-        tieTxtDni = (EditText) findViewById(R.id.tieTxtDni);
+        tieTxtDni = (EditText) findViewById(R.id.tieTxtDnii);
+        tieTxtLegajo = (EditText) findViewById(R.id.tieTxtLegajo);
 
-        txtLeyenda=(EditText)findViewById(R.id.txtLeyenda);
+        txtLeyenda = (EditText)findViewById(R.id.txtLeyenda);
 
         touchEventView = (TouchEventView)findViewById(R.id.canvas);
         touchEventView.setFocusableInTouchMode(true);
@@ -115,9 +122,12 @@ public class DatesUser extends AppCompatActivity{
 
                 try {
                     createPdfWrapper();
+                    registrarUsuarios();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
                     e.printStackTrace();
                 }
 
@@ -153,7 +163,8 @@ public class DatesUser extends AppCompatActivity{
             }
         });*/
 
-        tilDni.setError("null");
+        //tilDni.setErrorEnabled(true);
+
 
         tieTxtDni.addTextChangedListener(new TextWatcher() {
             @Override
@@ -169,8 +180,8 @@ public class DatesUser extends AppCompatActivity{
             @Override
             public void afterTextChanged(Editable editable)
             {
-
-                enableAffButton();
+                validarDatos();
+                //enableAffButton();
             }
         });
 
@@ -188,7 +199,8 @@ public class DatesUser extends AppCompatActivity{
             @Override
             public void afterTextChanged(Editable editable)
             {
-            enableAffButton();
+                validarDatos();
+                //enableAffButton();
         }
     });
 
@@ -232,6 +244,51 @@ public class DatesUser extends AppCompatActivity{
 
     }
 
+    private void onclick(View view){
+        Intent miIntent = null;
+
+
+        switch (view.getId())
+        {
+            case R.id.buttonConsultarBD:
+                miIntent = new Intent(DatesUser.this, ConsultarListViewBD.class);
+                break;
+
+        }
+
+        if(miIntent != null)
+            startActivity(miIntent);
+    }
+
+    private void registrarUsuarios() {
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this,"bd_usuarios", null, 1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        //En el mundo Java si instancias una fecha del tipo Date se inicializa con la fecha y hora actual
+        Date fechaHoy = new Date();
+
+        ContentValues values = new ContentValues();
+        //values.put(Utilidades.CAMPO_ID, campoId.getText().toString());
+        values.put(Utilidades.CAMPO_FECHA, getDateTime("yyyy-MM-dd HH:mm:ss",fechaHoy));
+        values.put(Utilidades.CAMPO_LEGAJO, tieTxtLegajo.getText().toString());
+        values.put(Utilidades.CAMPO_NOMBRE_APELLIDO, tieTxtNombre.getText().toString());
+        values.put(Utilidades.CAMPO_DNI, tieTxtDni.getText().toString());
+        values.put(Utilidades.CAMPO_PATH, userName.getPath());
+        values.put(Utilidades.CAMPO_FIRMADO, true);
+
+        Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
+
+        Toast.makeText(getApplicationContext(), "Id Registro: " + idResultante, Toast.LENGTH_SHORT).show();
+        db.close();
+    }
+
+    private String getDateTime(String pattern, Date fecha) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat( pattern, Locale.getDefault());
+
+        return dateFormat.format(fecha);
+    }
+
     private void removeKeyboard()
     {
         View view = this.getCurrentFocus();
@@ -243,12 +300,60 @@ public class DatesUser extends AppCompatActivity{
         }
     }
 
-    /*private boolean dniValido(String dni) {
+    private boolean esNomyApeValido(String nombre)
+    {
+        Pattern patron = Pattern.compile("^[a-zA-Z ñáéíóú]+$");
+        if (tieTxtNombre.getText().toString().equals(""))
+        {
+            tilNombre.setError("Campo Nombre y Apellido incompleto");
+            return false;
+        }
+        else
+        {
+            if (!patron.matcher(nombre).matches()) {
+                tilNombre.setError("El campo acepta solo letras");
+                return false;
+            }
+            else
+                tilNombre.setError(null);
+        }
 
-            tilDni.setError("Dni Invalido");
-            return true;
+        return true;
+    }
 
-    }*/
+    private boolean esDniValido(String nombre) {
+        Pattern patron = Pattern.compile("^[1-9]{1}+[0-9]{6,8}$");
+        if (tieTxtDni.getText().toString().equals(""))
+        {
+            tilDni.setError("Campo Dni incompleto");
+            return false;
+        }
+        else
+        {
+            if (!patron.matcher(nombre).matches()) {
+                tilDni.setError("El campo acepta solo numeros de 7 a 9 digitos");
+                return false;
+            }
+            else
+                tilDni.setError(null);
+        }
+
+        return true;
+    }
+
+    private void validarDatos() {
+        String nombre = tilNombre.getEditText().getText().toString();
+        String dni = tilDni.getEditText().getText().toString();
+
+        boolean a = esDniValido(dni);
+        boolean b = esNomyApeValido(nombre);
+        boolean c = touchEventView.painted;
+
+        if (a && b && c)
+            botonAff.setEnabled(true);
+        else
+            botonAff.setEnabled(false);
+    }
 
     private void createPdfWrapper() throws FileNotFoundException,DocumentException{
 
@@ -288,10 +393,15 @@ public class DatesUser extends AppCompatActivity{
 
     private void mergePdf(String[] srcs) {
 
-        final File pathFile = (File)getIntent().getExtras().get("pathFile");
-        String pathFileStr = pathFile.toString();
-        String[] archFile = pathFileStr.split("/");
-        String arch = archFile[archFile.length - 1].split("\\.")[0];
+        Global userName = Global.getInstance();
+        Date fechaHoy = new Date();
+        final String valorAutoIncrementado = "1";
+
+        //Esto sirve para cuando el archivo que se haya seleccionado por ejemplo "hojas" se agregue la cadena String "+pdf.pdf"
+        //final File pathFile = (File)getIntent().getExtras().get("pathFile");
+        //String pathFileStr = pathFile.toString();
+        //String[] archFile = pathFileStr.split("/");
+        //String arch = archFile[archFile.length - 1].split("\\.")[0];
 
         try {
             // Create document object
@@ -299,8 +409,14 @@ public class DatesUser extends AppCompatActivity{
             // Create pdf copy object to copy current document to the output mergedresult file
             String targetPdf = Environment.getExternalStorageDirectory().toString();
 
-            //Final pdfFile = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
-            File filePath = new File(targetPdf, "/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
+
+            //Final filePath = new File(Environment.getExternalStorageDirectory().toString(),"/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
+            //File filePath = new File(targetPdf, "/Download/carpetaJavaPruebas/" + arch + "+pdf.pdf");
+
+            File filePath = new File(targetPdf, "/Download/carpetaJavaPruebas/" + getDateTime("yyyyMMdd", fechaHoy)
+                                    + "_" + userName.getuserName() + "_" + valorAutoIncrementado + ".pdf");
+
+            userName.setPath(filePath.toString());
 
             PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath));
             //Open the document

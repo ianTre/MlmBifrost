@@ -3,6 +3,7 @@
     <string name="textoDeFirmaLabel_user.dates">Firma</string>
     <string name="hintNombre_user.dates">Nombre y apellido</string>
     <string name="hintDni_user.dates">Dni</string>
+    <string name="hintLegajo_user.dates">Legajo</string>
     <string name="textoButtonPrev">"   Previsualizar"</string>
     <string name="textoLeyendaLabel">Leyenda:</string>
     <string name="textoButonAff">Afirmativo</string>
@@ -10,4 +11,10 @@
     <string name="textoButtonExaminar">Examinar</string>
     <string name="textoTecnico">Dejo por sentado conformidad con el servicio brindado por el tecnico bashar al assad. Y que en el dia de la Fecha recibí la CPU funcionando y en óptimo estado. Sin más estoy a la espera de recibir 3 Mouse y 2 Teclados para concluir con lo solicitado anteriormente</string>
 
+    <string-array name="spinnerText">
+        <item>Selecciona un Usuario</item>
+        <item>Alejandro Bursessi</item>
+        <item>Gonzalo Jordan</item>
+        <item>Tomas García</item>
+    </string-array>
 </resources>

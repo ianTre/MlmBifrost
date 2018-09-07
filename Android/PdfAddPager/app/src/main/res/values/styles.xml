@@ -8,7 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="EditTextWhite" parent="TextAppearance.AppCompat">
+    <!-- <style name="EditTextWhite" parent="TextAppearance.AppCompat"> -->
+    <!-- AppTheme -->
+    <style name="EditTextWhite" parent="Widget.Design.TextInputLayout">
         <!-- Color que tiene el PlaceHolder del Textbox -->
         <item name="android:textColorHint">@color/editTextColorWhite</item>
         <!-- Dimension del texto -->
@@ -16,12 +18,17 @@
         <!-- Color que tiene el texto del TextBox -->
         <item name="android:textColorPrimary">@color/editTextColorWhite</item>
 
-        <item name="colorAccent">@color/colorPrimary</item>
+        <!-- <item name="colorAccent">@color/colorPrimary</item> -->
+
         <!-- Color cuando el control no está activado -->
         <item name="colorControlNormal">@color/colorPrimary</item>
-        <!-- Color que se pone tanto al estar Activado -->
+        <!-- Color que se pone al estar Activado -->
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
+    </style>
 
+    <style name="ErrorTextInputLayout" parent="TextAppearance.Design.Error">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@android:color/holo_red_dark</item>
     </style>
 
     <style name="RaisedButtonDark" parent="Theme.AppCompat.Light">
@@ -30,7 +37,5 @@
         <item name="android:textColor">@color/editTextColorWhite</item>
     </style>
 
-    <style name="Error" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">#FF9800</item>
-    </style>
+
 </resources>

@@ -5,7 +5,7 @@
     tools:context="com.example.bishoppc.pdfaddpager.DatesUser"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/salud2018">
+    android:background="@drawable/salud2018" >
 
     <com.example.bishoppc.pdfaddpager.CustomScrollView
         android:id="@+id/myScroll"
@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="76dp"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints" >
 
         <LinearLayout
             android:id="@+id/layout_main"
@@ -43,11 +43,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/paddingVerticalX3"
-                android:theme="@style/EditTextWhite" >
+                android:theme="@style/EditTextWhite"
+                app:errorTextAppearance="@style/ErrorTextInputLayout" >
 
                 <!--- app:errorEnabled="true"
                       app:errorTextAppearance="@style/Error" -->
-
                 <EditText
                     android:id="@+id/tieTxtNombre"
                     android:layout_width="match_parent"
@@ -55,18 +55,31 @@
                     android:hint="@string/hintNombre_user.dates" />
             </android.support.design.widget.TextInputLayout>
 
-
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilTxtDni"
+                android:id="@+id/tilTxtLegajo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/EditTextWhite" >
-
-                <!--- app:errorEnabled="true"
-                      app:errorTextAppearance="@style/Error" -->
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/paddingVerticalX1"
+                android:theme="@style/EditTextWhite"
+                app:errorTextAppearance="@style/ErrorTextInputLayout" >
 
                 <EditText
-                    android:id="@+id/tieTxtDni"
+                    android:id="@+id/tieTxtLegajo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/hintLegajo_user.dates" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tilTxtDnii"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/paddingVerticalX1"
+                android:theme="@style/EditTextWhite"
+                app:errorTextAppearance="@style/ErrorTextInputLayout" >
+
+                <EditText
+                    android:id="@+id/tieTxtDnii"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/hintDni_user.dates" />
@@ -93,12 +106,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/paddingVerticalX2">
+                android:layout_marginTop="@dimen/paddingVerticalX2" >
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1" >
 
                     <Button
                         android:id="@+id/buttonAff"
@@ -112,15 +125,14 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1" >
 
                     <Button
                         android:id="@+id/buttonNeg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:background="@drawable/button_neg"
-                        />
+                        android:background="@drawable/button_neg" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -134,6 +146,17 @@
                 android:theme="@style/RaisedButtonDark"
                 android:text="@string/textoButtonPrev" />
             <!--- android:drawableLeft="@drawable/correcto_1" -->
+
+            <Button
+                android:id="@+id/buttonConsultarBD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/paddingVerticalX2"
+                android:layout_marginTop="@dimen/paddingVerticalX2"
+                android:theme="@style/RaisedButtonDark"
+                android:text="Consultar BD" />
+
         </LinearLayout>
 
     </com.example.bishoppc.pdfaddpager.CustomScrollView>

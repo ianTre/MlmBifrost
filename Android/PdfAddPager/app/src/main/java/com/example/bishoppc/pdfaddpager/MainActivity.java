@@ -1,6 +1,5 @@
 package com.example.bishoppc.pdfaddpager;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         pdfView = (PDFView) findViewById(R.id.pdfReader);
         textoTecnico=(EditText)findViewById(R.id.txtTecnico);
         textoLeyenda=(EditText)findViewById(R.id.txtLeyenda);
-
 
         //botonExaminar.requestFocus();
 
