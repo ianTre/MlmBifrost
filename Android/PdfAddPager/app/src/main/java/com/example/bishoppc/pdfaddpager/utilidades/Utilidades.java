@@ -6,6 +6,8 @@ public class Utilidades {
     public static final String CAMPO_ID = "id";
     public static final String CAMPO_FECHA = "fecha";
     public static final String CAMPO_LEGAJO = "legajo";
+    public static final String CAMPO_NOMBRE_USER = "user";
+    public static final String CAMPO_LEYENDA = "leyenda";
     public static final String CAMPO_NOMBRE_APELLIDO = "nombre";
     public static final String CAMPO_DNI = "dni";
     public static final String CAMPO_PATH = "path";
@@ -16,6 +18,8 @@ public class Utilidades {
             + CAMPO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + CAMPO_FECHA + " DATETIME, "
             + CAMPO_LEGAJO + " TEXT, "
+            + CAMPO_NOMBRE_USER + " TEXT, "
+            + CAMPO_LEYENDA + " TEXT, "
             + CAMPO_NOMBRE_APELLIDO + " TEXT, "
             + CAMPO_DNI + " TEXT, "
             + CAMPO_PATH + " TEXT, "

@@ -7,14 +7,18 @@ import com.example.bishoppc.pdfaddpager.utilidades.Utilidades;
 
 public class ConexionSQLiteHelper extends SQLiteOpenHelper {
 
-    public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    private static final String DB_NAME ="bd_usuarios";
+    private static final int DB_SCHEME_VERSION = 3;
+
+    public ConexionSQLiteHelper(Context context) {
+        super(context, DB_NAME, null, DB_SCHEME_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //Genera las Tablas o Scripts correspondientes de nuestras Entidades
         db.execSQL(Utilidades.CREAR_TABLA_OPERACIONES);
+
     }
 
     @Override
@@ -24,4 +28,6 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS operaciones");
         onCreate(db);
     }
+
 }
+

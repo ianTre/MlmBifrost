@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         botonAff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this , PreviewUser.class);
+                Intent intent = new Intent(MainActivity.this , PreviewUserActivity.class);
                 intent.putExtra("pathFile",filePaths);
                 intent.putExtra("textoTecnico",textoTecnico.getText().toString());
                 startActivity(intent);

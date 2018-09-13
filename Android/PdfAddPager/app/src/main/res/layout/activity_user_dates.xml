@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.bishoppc.pdfaddpager.DatesUser"
+    tools:context="com.example.bishoppc.pdfaddpager.DatesUserActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/salud2018" >
@@ -155,7 +155,8 @@
                 android:layout_marginBottom="@dimen/paddingVerticalX2"
                 android:layout_marginTop="@dimen/paddingVerticalX2"
                 android:theme="@style/RaisedButtonDark"
-                android:text="Consultar BD" />
+                android:text="Consultar BD"
+                android:onClick="onClick" />
 
         </LinearLayout>
 
