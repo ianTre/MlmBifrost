@@ -18,9 +18,9 @@ public class PreviewUserActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_preview);
 
-        Bundle extras = getIntent().getExtras();
+        //Bundle extras = getIntent().getExtras();
         final File pathFile = (File)getIntent().getExtras().get("pathFile");
-        final String textoTecnico=(String)getIntent().getExtras().get("textoTecnico");
+        final String textoTecnico = (String)getIntent().getExtras().get("textoTecnico");
         //Toast.makeText(this, pathFile.toString(), Toast.LENGTH_LONG).show();
 
         pdfView = (PDFView)findViewById(R.id.pdfReader);

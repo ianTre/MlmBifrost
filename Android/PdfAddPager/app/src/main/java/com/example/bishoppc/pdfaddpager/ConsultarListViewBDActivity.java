@@ -28,7 +28,7 @@ public class ConsultarListViewBDActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_list_view_bd);
 
-        conn = new ConexionSQLiteHelper(getApplicationContext());
+        conn = new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios", null, 3);
 
         listViewPersonas = (ListView) findViewById(R.id.listViewPersonas);
 
@@ -80,6 +80,7 @@ public class ConsultarListViewBDActivity extends AppCompatActivity {
         }
 
         obtenerLista();
+        cursor.close();
     }
 
     private void obtenerLista() {

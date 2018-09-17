@@ -1,6 +1,7 @@
 package com.example.bishoppc.pdfaddpager;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
     private Spinner mySpinner;
     private ImageView usuarioLogo;
 
-    Global userName = Global.getInstance();
+    Global globalVar = Global.getInstance();
     private static int WELCOME_TIMEOUT = 2500;
 
     @Override
@@ -28,6 +29,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        String pathFile = Environment.getExternalStorageDirectory().toString();
+        //En esta variable se guardara la ruta donde recurrira el programa a buscar los pdf modelos
+        //(hojas.pdf y pdf.pdf) y grabar los archivos generados.
+        globalVar.setPathPrograma( pathFile + "/Download/carpetaJavaPruebas/" );
         textView = (TextView) findViewById(R.id.textview);
         imageView = (ImageView) findViewById(R.id.imageview);
         mySpinner = (Spinner) findViewById(R.id.spinner);
@@ -59,9 +64,7 @@ public class SplashActivity extends AppCompatActivity {
         java.util.Date currentDate = calendar.getTime();
 
         // Ahora creamos una java.sql.Date a partir de la java.util.Date
-        java.sql.Date hoy = new java.sql.Date(currentDate.getTime());
-
-        userName.setFecha(hoy);*/
+        java.sql.Date hoy = new java.sql.Date(currentDate.getTime());*/
 
         mySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -71,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
                 {
                     Intent welcome = new Intent(SplashActivity.this, MainActivity.class);
 
-                    userName.setuserName(mySpinner.getSelectedItem().toString());
+                    globalVar.setuserName(mySpinner.getSelectedItem().toString());
                     usuarioLogo.setImageResource(R.drawable.usuario_1);
                     startActivity(welcome);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

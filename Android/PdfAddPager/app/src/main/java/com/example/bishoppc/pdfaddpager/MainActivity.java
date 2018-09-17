@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
             case PICKER:
                 if(resultCode == RESULT_OK){
 
+                    //Obtiene path del archivo seleccionado
                     textExaminar.setText(data.getData().getPath().toString());
                     filePaths = new File(textExaminar.getText().toString());
                     botonAff.setEnabled(true);

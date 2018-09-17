@@ -10,8 +10,11 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
     private static final String DB_NAME ="bd_usuarios";
     private static final int DB_SCHEME_VERSION = 3;
 
-    public ConexionSQLiteHelper(Context context) {
-        super(context, DB_NAME, null, DB_SCHEME_VERSION);
+    //public ConexionSQLiteHelper(Context context, "bd_usuarios", null, 3) {
+    //public ConexionSQLiteHelper(Context context) {
+    public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        //super(context, DB_NAME, null, DB_SCHEME_VERSION);
+        super(context, name, factory, version);
     }
 
     @Override

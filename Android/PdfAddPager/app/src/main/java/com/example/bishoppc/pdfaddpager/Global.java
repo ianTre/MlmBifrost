@@ -1,31 +1,30 @@
 package com.example.bishoppc.pdfaddpager;
 
-
-import java.sql.Date;
-
 public class Global
 {
 
     private static Global instance;
-    private static String userName;
+    private static String username;
+    private static String pathArchGenerado;
+    private static String pathPrograma;
 
-    private static String path;
-
-    private Global(){
-
-    }
+    private Global(){ }
 
     public void setuserName(String name) {
-        Global.userName=name;
+        Global.username = name;
     }
 
     public String getuserName() {
-        return Global.userName;
+        return Global.username;
     }
 
-    public static String getPath() { return Global.path; }
+    public String getPathArchGenerado() { return Global.pathArchGenerado; }
 
-    public static void setPath(String path) { Global.path = path; }
+    public void setPathArchGenerado(String path) { Global.pathArchGenerado = path; }
+
+    public String getPathPrograma() { return pathPrograma; }
+
+    public void setPathPrograma(String pathPrograma) { Global.pathPrograma = pathPrograma; }
 
     public static synchronized Global getInstance(){
         if(instance == null)

@@ -64,6 +64,7 @@ public class DatesUserActivity extends AppCompatActivity{
 
     TextInputLayout tilNombre;
     TextInputLayout tilDni;
+    TextInputLayout tilLegajo;
 
     EditText txtLeyenda;
     EditText tieTxtNombre;
@@ -79,7 +80,7 @@ public class DatesUserActivity extends AppCompatActivity{
     Button botonExaminar;
     EditText textExaminar;
 
-    Global userName = Global.getInstance();
+    Global globalVar = Global.getInstance();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -96,6 +97,7 @@ public class DatesUserActivity extends AppCompatActivity{
 
         tilNombre = (TextInputLayout)findViewById(R.id.tilTxtNombre);
         tilDni=(TextInputLayout)findViewById(R.id.tilTxtDnii);
+        tilLegajo=(TextInputLayout)findViewById(R.id.tilTxtLegajo);
 
         tieTxtNombre = (EditText) findViewById(R.id.tieTxtNombre);
         tieTxtDni = (EditText) findViewById(R.id.tieTxtDnii);
@@ -201,6 +203,23 @@ public class DatesUserActivity extends AppCompatActivity{
         }
     });
 
+        tieTxtLegajo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validarDatos();
+            }
+        });
+
         botonNeg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -258,9 +277,10 @@ public class DatesUserActivity extends AppCompatActivity{
     }
 
     private void registrarUsuarios() {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_usuarios", null, 3);
         SQLiteDatabase db = conn.getWritableDatabase();
 
+        //conn.onUpgrade(db,3,4);
         //En el mundo Java si instancias una fecha del tipo Date se inicializa con la fecha y hora actual
         Date fechaHoy = new Date();
 
@@ -268,11 +288,11 @@ public class DatesUserActivity extends AppCompatActivity{
         //values.put(Utilidades.CAMPO_ID, campoId.getText().toString());
         values.put(Utilidades.CAMPO_FECHA, getDateTime("yyyy-MM-dd HH:mm:ss",fechaHoy));
         values.put(Utilidades.CAMPO_LEGAJO, tieTxtLegajo.getText().toString());
-        values.put(Utilidades.CAMPO_NOMBRE_USER, userName.getuserName());
+        values.put(Utilidades.CAMPO_NOMBRE_USER, globalVar.getuserName());
         values.put(Utilidades.CAMPO_LEYENDA, txtLeyenda.getText().toString());
         values.put(Utilidades.CAMPO_NOMBRE_APELLIDO, tieTxtNombre.getText().toString());
         values.put(Utilidades.CAMPO_DNI, tieTxtDni.getText().toString());
-        values.put(Utilidades.CAMPO_PATH, userName.getPath());
+        values.put(Utilidades.CAMPO_PATH, globalVar.getPathArchGenerado());
         values.put(Utilidades.CAMPO_FIRMADO, true);
 
         try{
@@ -346,15 +366,37 @@ public class DatesUserActivity extends AppCompatActivity{
         return true;
     }
 
+    private boolean esLegajoValido(String nombre){
+        Pattern patron = Pattern.compile("^[1-9]{1}+[0-9]{0,4}$");
+        if (tieTxtLegajo.getText().toString().equals(""))
+        {
+            tilLegajo.setError("Campo Legajo incompleto");
+            return false;
+        }
+        else
+        {
+            if (!patron.matcher(nombre).matches()) {
+                tilLegajo.setError("El campo solo acepta numeros de 1 a 5 cifras");
+                return false;
+            }
+            else
+                tilLegajo.setError(null);
+        }
+
+        return true;
+    }
+
     private void validarDatos() {
         String nombre = tilNombre.getEditText().getText().toString();
         String dni = tilDni.getEditText().getText().toString();
+        String legajo = tilLegajo.getEditText().getText().toString();
 
         boolean a = esDniValido(dni);
         boolean b = esNomyApeValido(nombre);
         boolean c = touchEventView.painted;
+        boolean d = esLegajoValido(legajo);
 
-        if (a && b && c)
+        if (a && b && c && d)
             botonAff.setEnabled(true);
         else
             botonAff.setEnabled(false);
@@ -385,20 +427,22 @@ public class DatesUserActivity extends AppCompatActivity{
             }
             return;
         }else {
+            //Aca se crea la hoja pdf.pdf que contiene la Firma
             CreatePDF();
 
             //Bundle extras = getIntent().getExtras();
             final File pathFile = (File)getIntent().getExtras().get("pathFile");
 
-            //Archivos que deseo unir
-            String[] srcs = {pathFile.toString(), "/storage/emulated/0/Download/carpetaJavaPruebas/pdf.pdf"};
+            //String[] srcs son los Archivos que deseo unir
+            //pathfile = Archivo seleccionado con el boton Examinar   (hojas.pdf)
+            //globalVar.getPathPrograma() + "pdf.pdf"                 (pdf.pdf)
+            String[] srcs = {pathFile.toString(), globalVar.getPathPrograma() + "pdf.pdf"};
             mergePdf(srcs);
         }
     }
 
     private void mergePdf(String[] srcs) {
 
-        Global userName = Global.getInstance();
         Date fechaHoy = new Date();
         final String valorID;
 
@@ -420,10 +464,10 @@ public class DatesUserActivity extends AppCompatActivity{
 
             valorID = ConsultaUltID();
 
-            File filePath = new File(targetPdf, "/Download/carpetaJavaPruebas/" + getDateTime("yyyyMMdd", fechaHoy)
-                                    + "_" + userName.getuserName() + "_" + valorID + ".pdf");
+            File filePath = new File(globalVar.getPathPrograma(), getDateTime("yyyyMMdd", fechaHoy)
+                                    + "_" + globalVar.getuserName() + "_" + valorID + ".pdf");
 
-            userName.setPath(filePath.toString());
+            globalVar.setPathArchGenerado(filePath.toString());
 
             PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath));
             //Open the document
@@ -469,24 +513,30 @@ public class DatesUserActivity extends AppCompatActivity{
             e.printStackTrace();
             Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
         }
-        catch (Exception e)
+        catch (IllegalArgumentException e)
         {
             e.printStackTrace();
+            Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e)
+        {
+
         }
     }
 
     private String ConsultaUltID() {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_usuarios", null, 3);
         SQLiteDatabase db = conn.getReadableDatabase();
+        boolean hayUltimoRegistro;
 
         String valor="1";
 
         //select * from usuarios
         Cursor cursor = db.rawQuery("SELECT * FROM " + Utilidades.TABLA_OPERACIONES , null);
 
-        cursor.moveToLast();
+        hayUltimoRegistro=cursor.moveToLast();
 
-        if(cursor != null)
+        if(hayUltimoRegistro)
             valor = Integer.toString(cursor.getInt(0)+1);
 
         return valor;
@@ -604,12 +654,7 @@ public class DatesUserActivity extends AppCompatActivity{
         canvas.drawPath(path,paint);                                    //Se dibuja el recorrido hecho con el lienzo al pdf //
         document.finishPage(page);
 
-
-        // write the document content
-        //String targetPdf = "/sdcard/test.pdf";
-        targetPdf = Environment.getExternalStorageDirectory().toString();
-        File filePath = new File(targetPdf, "/Download/carpetaJavaPruebas/"+"pdf.pdf"); //Pdf que se crea con la firma del touch
-
+        File filePath = new File(globalVar.getPathPrograma(),"pdf.pdf"); //Pdf que se crea con la firma del touch
 
         try
         {
