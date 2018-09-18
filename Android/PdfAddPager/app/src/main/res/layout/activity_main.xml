@@ -47,11 +47,20 @@
                 <requestFocus/>
             </LinearLayout>
 
-            <com.github.barteksc.pdfviewer.PDFView
-                android:id="@+id/pdfReader"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_marginTop="@dimen/paddingVerticalX2" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/border"
+                android:layout_marginTop="@dimen/paddingVerticalX2">
+
+                <com.github.barteksc.pdfviewer.PDFView
+                    android:id="@+id/pdfReader"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp" />
+
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="match_parent"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <stroke
+        android:width="5px"
+        android:color="@color/colorPrimary" />
+    <!-- <padding
+        android:left="30dp"
+        android:bottom="30dp"
+        android:top="30dp"
+        android:right="30dp" -->
+         />
+    <!--<solid android:color="@color/backgroundTouchView_Firma" /> -->
+
+</shape>

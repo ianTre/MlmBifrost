@@ -3,6 +3,7 @@ package com.example.bishoppc.pdfaddpager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
@@ -31,9 +32,9 @@ public class TouchEventView extends View {
         super(context, attrs);
         this.context = context;
 
-        int naranja = ContextCompat.getColor(context, R.color.colorPrimaryDark);
+        //int naranja = ContextCompat.getColor(context, R.color.colorPrimary);
         mPaint.setAntiAlias(true);
-        mPaint.setColor(naranja);
+        mPaint.setColor(Color.BLUE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(4f);

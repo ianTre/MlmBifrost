@@ -237,7 +237,7 @@ public class DatesUserActivity extends AppCompatActivity{
             public boolean onTouch(View v, MotionEvent event) {
                 removeKeyboard();
                 if(MotionEvent.ACTION_MOVE == event.getAction())
-                    enableAffButton();
+                    validarDatos();
 
                 return false;
             }
